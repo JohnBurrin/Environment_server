@@ -42,7 +42,7 @@ SSD1306Wire display(0x3c, SDA, SCL);   // ADDRESS, SDA, SCL  -  SDA and SCL usua
 int counter = 0;
 float pressure;
 float temperature;
-float humidity;
+int humidity;
 
 String wifiMacString;
 String wifiIPString;
@@ -51,8 +51,7 @@ String sensorString = "Bare with..";
 
 void setSensorValues() {
       #ifdef _COMPILE_BMP_280
-        sensors_event_t temp_event, pressure_event; 
-        bmp_temp->getEvent(&temp_event);
+        sensors_event_t pressure_event; 
         bmp_pressure->getEvent(&pressure_event);
         pressure = pressure_event.pressure + pressure_offset;
         //temp_event.temperature;
@@ -179,7 +178,7 @@ void loop()
         httpRequestData = httpRequestData + "&mac_address=" + String(wifiMacString) + "&ip_address=" + String(wifiIPString);
         
         #ifdef _COMPILE_BMP_280
-          httpRequestData = httpRequestData + "&pressure=" + pressure; // + "&bmp_temp=" + bmp_temp;
+          httpRequestData = httpRequestData + "&pressure=" + pressure;
         #endif
         
         httpRequestData = httpRequestData + "&sensor_id=" + sensorId + "";
@@ -197,7 +196,7 @@ void loop()
               sensorString = String(pressure) + "mb";
             break;
             case 1:
-              sensorString = String(temperature) + (char)247 + "C";
+              sensorString = String(temperature) + (char)247 + "°C";
             break;
             case 2:
               sensorString = String(humidity) + "%";
